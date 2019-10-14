@@ -31,7 +31,7 @@ pipeline {
 
     stage('Push Image to ECR'){
       steps{
-      withAWS(credentials:'aws-ecr-credential') {
+      withAWS(credentials:'AWS-ECR-Credentials') {
        script {
 	       //def login = ecrLogin()
 		   //sh "${login}"
