@@ -1,9 +1,4 @@
 pipeline {
-  environment {
-    registry = "psibang19/sns-sapient"
-    registryCredential = 'psidocker'
-    dockerImage = ''
-  }
   agent any
   stages {
 	stage('Unit Test') {
@@ -28,31 +23,24 @@ pipeline {
 				sh label: '', script: 'mvn clean install -DskipTests=True'
 		}
 	}
-  stage('Docker Image Build') {
-    steps{
-	    // sh label: '', script: 'docker build -t cloudconfigservice:latest .'
-      script {
-        dockerImage = docker.build registry + ":userprofile-service"
+     stage('Docker Image Build') {
+      steps{
+         sh "docker build -t sns-userprofile:latest ."
       }
     }
-  }
 
-  stage('Push Image to DockerHub'){
-    steps{
-      // sh label: '', script: '''docker tag cloudconfigservice:latest psibang19/cloudconfigservice:latest
-      //                         docker push psibang19/cloudconfigservice:latest
-      //                       '''
-      script {
-        docker.withRegistry( '', registryCredential ) {
-          dockerImage.push()
+    stage('Push Image to ECR'){
+      steps{
+        sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
+        sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
         }
       }
-    }
-  }
+
+ 
 
   stage('Remove Unused docker image') {
     steps{
-      sh "docker rmi $registry:userprofile-service"
+      sh "docker rmi $registry:sns-userprofile:latest"
     }
   }    
 }

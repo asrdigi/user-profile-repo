@@ -50,12 +50,6 @@ public class UserController {
 		return "Hello form Backend!!! " + " Host : localhost " + " :: Port : " + serverPort;
 	}
 
-	@GetMapping("/users")
-	public ResponseEntity<List<User>> getAllUsers() {
-		System.out.println("Inside userprofile-service");
-		return new ResponseEntity<List<User>>(userService.getAllUsers(), HttpStatus.OK);
-	}
-
 	@GetMapping("/users/{id}")
 	public ResponseEntity<User> getUsersByUsername(@PathVariable("id") String id) {
 		return new ResponseEntity<User>(userService.getUserByUsername(id), HttpStatus.OK);
