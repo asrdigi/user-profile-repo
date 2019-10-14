@@ -35,9 +35,7 @@ pipeline {
         sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
         }
       }
-
  
-
   stage('Remove Unused docker image') {
     steps{
       sh "docker rmi $registry:sns-userprofile:latest"
