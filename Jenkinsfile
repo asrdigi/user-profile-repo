@@ -31,12 +31,15 @@ pipeline {
 
     stage('Push Image to ECR'){
       
-      
-     docker.withRegistry('https://994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile', 'ecr:us-east-2:AWS-ECR-Credentials'){
-     	sh '''
-     		docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest
-     	'''
-     }	
+      script{
+	     docker.withRegistry('https://994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile', 'ecr:us-east-2:AWS-ECR-Credentials'){
+	     	sh '''
+	     		docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest
+	     	'''
+	     }	     
+      }
+
+     
 		  	//sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
         	//sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
 		  
