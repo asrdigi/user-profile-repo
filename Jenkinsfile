@@ -32,7 +32,7 @@ pipeline {
     stage('Push Image to ECR'){
       steps{
       
-     	withCredentials([AmazonWebServicesCredentialsBinding(
+     	withCredentials([string(
      	credentialsId: 'AWS-ECR-Credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', accessKeyVariable: 'AWS_ACCESS_KEY_ID')]) {
 		 script {
 		  	sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
