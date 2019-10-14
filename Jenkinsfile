@@ -34,18 +34,21 @@ pipeline {
     }
 
     stage('Push Image to ECR'){
-      steps{
-	
-	  withCredentials([[
-            $class: 'AmazonWebServicesCredentialsBinding',
-            credentialsId: 'AWS-ECR-Credentials',
-            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-        ]]){
-		    sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
-			sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
-		}
-	} 
+ //     steps{
+	 docker.withRegistry('https://994589964344.dkr.ecr.us-east-2.amazonaws.com', 'ecr:us-east-1:AWS-ECR-Credentials') {
+    	docker.image('sns-userprofile').push('latest')
+  	 }
+	 
+//	  withCredentials([[
+//            $class: 'AmazonWebServicesCredentialsBinding',
+//            credentialsId: 'AWS-ECR-Credentials',
+//            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+//            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+//        ]]){
+//		    sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
+//			sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
+//		}
+//	} 
 	    
 
   	//sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
