@@ -31,25 +31,16 @@ pipeline {
 
     stage('Push Image to ECR'){
       steps{
-      withAWS(credentials:'AWS-ECR-Credentials') {
-       script {
-	       //def login = ecrLogin()
-		   //sh "${login}"
-		    sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
-        	//docker.withRegistry('https://994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest', 'ecr:us-east-2:AWS-ECR-Credentials')
+      
+     	withCredentials([AmazonWebServicesCredentialsBinding(
+     	credentialsId: 'AWS-ECR-Credentials', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY', accessKeyVariable: 'AWS_ACCESS_KEY_ID')]) {
+		 script {
+		  	sh "docker tag sns-userprofile:latest 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
         	sh "docker push 994589964344.dkr.ecr.us-east-2.amazonaws.com/sns-userprofile:latest"
-        
-	   		}
-       }
-      	//sh "\$(aws ecr get-login)"
-      	
-     	//withCredentials([usernamePassword(credentialsId: 'hello-kb', passwordVariable: 'pass', usernameVariable: 'user')]) {
-    		// the code in here can access $pass and $user
-		//}
-      	
-       
-        }
+		  }
+		}      	
       }
+  	}
  
   stage('Remove Unused docker image') {
     steps{
