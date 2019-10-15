@@ -1,10 +1,8 @@
 package com.sapient.userservice.controller;
 
-import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sapient.userservice.KafkaProducerProxy;
 import com.sapient.userservice.dao.MessageTemplate;
 import com.sapient.userservice.model.User;
 import com.sapient.userservice.service.UserService;
-
-
-@FeignClient(name="userprofile-producer")
-interface KafkaProducerProxy {
-  @PostMapping(value = "/kafka/publish",  consumes= {"application/json"})
-  	public void sendMessage(@RequestBody MessageTemplate payload);
-}
 
 
 @RestController
@@ -34,10 +26,10 @@ public class UserController {
 	private KafkaProducerProxy proxy;
 	
 	@Autowired
-	Environment environment;
+	private Environment environment;
 
 	@Autowired
-	UserService userService;
+	private UserService userService;
 
 	@GetMapping("/backend")
 	public String backend() {

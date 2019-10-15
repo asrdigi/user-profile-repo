@@ -15,6 +15,14 @@ pipeline {
             jacoco()
         }
   }
+  
+  stage('SonarQube'){
+  	steps{
+  		bat label: '', script: '''mvn sonar:sonar \
+  		-Dsonar.host.url=http://localhost:9000  -Dsonar.login=fe6b4bc970fe649ae912b67c76430a21d1b5e03e'''
+  	}
+  
+  }
  	/*stage('SonarQube'){
        steps{
            bat label: '', script: '''mvn sonar:sonar \

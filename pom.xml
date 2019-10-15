@@ -19,6 +19,18 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+		<sonar.sources>src/main</sonar.sources>
+       <sonar.tests>src/test</sonar.tests>
+       <sonar.sources>src/main</sonar.sources>
+       <sonar.tests>src/test</sonar.tests>
+       <!-- Below property indicates the pattern of the test suite -->
+       <runSuite>**/*Suite.class</runSuite>
+       <!-- Sonar-JaCoCo properties -->
+       <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+       <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+       <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+       <sonar.language>java</sonar.language>
+       <jacoco.version>0.8.4</jacoco.version>
 	</properties>
 
 	<dependencies>
@@ -75,6 +87,11 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
+           <groupId>org.jacoco</groupId>
+           <artifactId>jacoco-maven-plugin</artifactId>
+           <version>0.8.4</version>
+       </dependency>
+		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-oauth2</artifactId>
 		</dependency>
@@ -82,21 +99,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-		
-		
+
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-hystrix -->
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-hystrix</artifactId>
-    <version>1.4.7.RELEASE</version>
-</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-hystrix</artifactId>
+			<version>1.4.7.RELEASE</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-feign -->
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-feign</artifactId>
-    <version>1.4.7.RELEASE</version>
-</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-feign</artifactId>
+			<version>1.4.7.RELEASE</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-config</artifactId>
@@ -106,17 +123,17 @@
 			<artifactId>spring-cloud-starter-zipkin</artifactId>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-rest-core -->
-<dependency>
-    <groupId>org.springframework.data</groupId>
-    <artifactId>spring-data-rest-core</artifactId>
-    <version>2.0.0.RELEASE</version>
-</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-core</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+
 
 
 	</dependencies>
 
-<dependencyManagement>
+	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -125,6 +142,7 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+			
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -133,6 +151,44 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+               <groupId>org.jacoco</groupId>
+               <artifactId>jacoco-maven-plugin</artifactId>
+               <version>${jacoco.version}</version>
+               <executions>
+                   <execution>
+                       <id>prepare-agent</id>
+                       <goals>
+                           <goal>prepare-agent</goal>
+                       </goals>
+                   </execution>
+                   <execution>
+                       <id>report</id>
+                       <phase>prepare-package</phase>
+                       <goals>
+                           <goal>report</goal>
+                       </goals>
+                   </execution>
+                   <execution>
+                       <id>post-unit-test</id>
+                       <phase>test</phase>
+                       <goals>
+                           <goal>report</goal>
+                       </goals>
+                       <configuration>
+                           <!-- Sets the path to the file which contains the execution data. -->
+                           <dataFile>target/jacoco.exec</dataFile>
+                           <!-- Sets the output directory for the code coverage report. -->
+                           <outputDirectory>target/jacoco-ut</outputDirectory>
+                       </configuration>
+                   </execution>
+               </executions>
+               <configuration>
+                   <systemPropertyVariables>
+                       <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                   </systemPropertyVariables>
+               </configuration>
+           </plugin>
 		</plugins>
 	</build>
 
